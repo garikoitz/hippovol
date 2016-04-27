@@ -51,16 +51,20 @@ end
   3. Edit at least the wildcard to detect all your subjects in the folder, the rest of the short version options are explained in the file. 
   4. Run hip_run
 
-OUTPUT: the stat file will be a csv file in SUBJECTS_DIR/hippovol/, and as said before, every subject will have its segmented hippocampus under the mri folder (if the option to save the segmented volumes where chosen, usually we just want the volume). The resulting labels (HEAD, BODY, TAIL, POSTERIOR) will be stored in the same location: in every subjects mri folder with .mgz extension. 
+OUTPUT: 
+  - The stat file will be a csv file in SUBJECTS_DIR/hippovol/. The name of the file will differ depending on the options used.
+  - If the option to write the volumes was selected, every subject will have its segmented hippocampus under the mri folder. The resulting labels (HEAD, BODY, TAIL, POSTERIOR) will be stored in every subjects mri folder with .mgz extension. 
 
 
 
-## HOW-TO: Long Version
-This code has been used to generate all the data in the above mentioned paper, and it allows to many more options than above. 
-Every option should be explained in hip_run.m.
-  - NOTE 1: You will have result based on aseg. I've used other options: for example, adding all the hippo-subfields from version FS 5.3, and the resulting hippocampus it is a little bit more refined than the original aseg version. I am waiting for FS6.0, then I will use the results of the new hippo-subfields code to create new and more refined whole hippocampi by default. Will let you know. In any case, the results are usually highly correlated so hopefully you will find similar results with your data. 
-  - NOTE 2: It is possible to use the method to rotate the hippocampi, and then select the landmark manually. 
-  - NOTE 3: There is a beta version of a compiled and Dockerized version available. We will update it and upload it here. 
+## HOW-TO: Long Version (to do)
+This code has been used to generate all the data in the above mentioned paper, and it allows the selection of many more options, but almost for everybody the short version should be enough. 
+
+Every available option in the Long Version should be explained in the Long Version section of hip_run.m.
+
+  - NOTE 1: You will be able to select other methods than aseg. We've already used other options: for example, adding all the hippo-subfields from version FS 5.3. The resulting hippocampus is a little bit more refined than the original aseg version. When FS 6.0 is out we will use the results of the new hippo-subfields code to create new and more refined whole hippocampi by default.  
+  - NOTE 2: It is possible to use the method to rotate the hippocampi, and then select the landmark manually. It will be explained how to write an .csv file with the landmark values and how to perform the segmentation using these values. 
+  - NOTE 3: There is a beta version of a compiled and Dockerized version available. We will update it and upload it here after the FS 6.0 version is updated. 
 
 
 
