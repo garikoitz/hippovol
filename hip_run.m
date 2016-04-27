@@ -93,9 +93,9 @@ mkdirquiet(mat_dirs);
 
 for jj=1:length(methods)
     method = methods{jj};
-    if strcomp(method, 'Landmark')
+    if strcmp(method, 'Landmark')
             lta_list = landmark_lta_list;
-    elseif strcomp(method, 'MNI')
+    elseif strcmp(method, 'MNI')
             lta_list = MNI_lta_list;
     end
     for kk=1:length(orientations)
