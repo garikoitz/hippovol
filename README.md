@@ -1,4 +1,3 @@
-(first draft to check markup)
 # Automated segmentation of the human hippocampus along its longitudinal axis.
 
 This code was created to automatically segment MRI hippocampal T1-w images. 
@@ -21,11 +20,12 @@ Requirements and installation:
 
 
 HOT-TO: Short Version
-1.- Obtain the main hippocampal segmentation from Freesurfer's aseg.
-1.1.- Extract the hippocampal labels from Freesurfer's aseg. Assuming that you are always located in the SUBJECTS_DIR of your project: 
-1.2.- mri_extract_label  <SUBJECT_NAME>/mri/aseg.mgz 17  <SUBJECT_NAME>/mri/lh.asegHippo.mgz
-1.3.- mri_extract_label  <SUBJECT_NAME>/mri/aseg.mgz 53  <SUBJECT_NAME>/mri/rh.asegHippo.mgz
-Sample code (run matlab from command line with FREESURFER_HOME defined): 
+1. Obtain the main hippocampal segmentation from Freesurfer's aseg.
+  1. Extract the hippocampal labels from Freesurfer's aseg. Assuming that you are always located in the SUBJECTS_DIR of your project: 
+  2. mri_extract_label  <SUBJECT_NAME>/mri/aseg.mgz 17  <SUBJECT_NAME>/mri/lh.asegHippo.mgz
+  3. mri_extract_label  <SUBJECT_NAME>/mri/aseg.mgz 53  <SUBJECT_NAME>/mri/rh.asegHippo.mgz
+  *Sample code (run matlab from command line with FREESURFER_HOME defined): *
+'''matlab
 basedir = pwd;
 sub = dir('S_*'); 
 hemis = {'lh', 'rh'};
@@ -38,15 +38,15 @@ for h=1:2
         system(cmd);
     end
 end
+'''
+  4. This will create the lh.asegHippo.mgz and rh.asegHippo.mgz inside the mri folder of each subject in your experiment. 
+  5. Do quality check in this step: if aseg didn't do a good job remove the subject. 
 
-1.4.- This will create the lh.asegHippo.mgz and rh.asegHippo.mgz inside the mri folder of each subject in your experiment. 
-1.5.- Do quality check in this step: if aseg didn't do a good job remove the subject. 
-
-2.- Run the segmentation
-2.1.- Go to the SUBJECTS_DIR in Matlab
-2.2.- Write in the command line: edit hip_run.m
-2.3.- Edit at least the wildcard to detect all your subjects in the folder, the rest of the short version options are explained in the file. 
-2.4.- Run hip_run
+2. Run the segmentation
+  1. Go to the SUBJECTS_DIR in Matlab
+  2. Write in the command line: edit hip_run.m
+  3. Edit at least the wildcard to detect all your subjects in the folder, the rest of the short version options are explained in the file. 
+  4. Run hip_run
 
 OUTPUT: the stat file will be a csv file in SUBJECTS_DIR/hippovol/, and as said before, every subject will have its segmented hippocampus under the mri folder (if the option to save the segmented volumes where chosen, usually we just want the volume). The resulting labels (HEAD, BODY, TAIL, POSTERIOR) will be stored in the same location: in every subjects mri folder with .mgz extension. 
 
