@@ -47,7 +47,7 @@ end
 
 ### 2. Run the segmentation
   1. Go to the SUBJECTS_DIR in Matlab
-  2. Write in the command line: edit hip_run.m
+  2. Write in the command line: `edit hip_run.m`
   3. Edit at least the wildcard to detect all your subjects in the folder, the rest of the short version options are explained in the file. 
   4. Run hip_run
 
