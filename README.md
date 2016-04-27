@@ -28,7 +28,7 @@ Human Brain Mapping (in Press)
   *Sample code to extract the aseg hippocampi (run matlab from command line with FREESURFER_HOME defined):*
 ```matlab
 basedir = pwd;
-sub = dir('S_*'); 
+sub = dir('S_*');  % Edit the wildcard to select your subjects 
 hemis = {'lh', 'rh'};
 labelNos = {'17', '53'};
 for h=1:2
