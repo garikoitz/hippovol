@@ -19,22 +19,24 @@ Human Brain Mapping (in Press)
 
 
 
-## HOT-TO: Short Version
+## HOW-TO: Short Version
 ### 1. Obtain the main hippocampal segmentation from Freesurfer's aseg.
   - Extract the hippocampal labels from Freesurfer's aseg. Assuming that you are always located in the SUBJECTS_DIR of your project: 
   - mri_extract_label  <SUBJECT_NAME>/mri/aseg.mgz 17  <SUBJECT_NAME>/mri/lh.asegHippo.mgz
   - mri_extract_label  <SUBJECT_NAME>/mri/aseg.mgz 53  <SUBJECT_NAME>/mri/rh.asegHippo.mgz
 
-  *Sample code (run matlab from command line with FREESURFER_HOME defined): *
+  *Sample code to extract the aseg hippocampi (run matlab from command line with FREESURFER_HOME defined):*
 ```matlab
 basedir = pwd;
 sub = dir('S_*'); 
 hemis = {'lh', 'rh'};
+labelNos = {'17', '53'};
 for h=1:2
     hemi = hemis{h};
+    label = labelNos{h};
     for ns=1: length(sub)
         cmd = ['mri_extract_label ' ...
-               basedir filesep sub(ns).name filesep 'mri' filesep 'aseg.mgz 17 ' ...
+               basedir filesep sub(ns).name filesep 'mri' filesep 'aseg.mgz ' label ' ' ...
                basedir filesep sub(ns).name filesep 'mri' filesep hemi '.asegHippo.mgz'];
         system(cmd);
     end
