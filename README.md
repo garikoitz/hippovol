@@ -11,7 +11,7 @@ Human Brain Mapping (in Press)
 
 
 
-Requirements and installation:
+## Requirements and installation:
 - git clone this repository (or download the .zip file) and add it to your matlab path. 
 - add $FREESURFER_HOME/matlab to your path
 - Download and add geom3d (http://www.mathworks.com/matlabcentral/fileexchange/24484-geom3d) to your path.
@@ -19,13 +19,14 @@ Requirements and installation:
 
 
 
-HOT-TO: Short Version
-1. Obtain the main hippocampal segmentation from Freesurfer's aseg.
+## HOT-TO: Short Version
+### 1. Obtain the main hippocampal segmentation from Freesurfer's aseg.
   1. Extract the hippocampal labels from Freesurfer's aseg. Assuming that you are always located in the SUBJECTS_DIR of your project: 
   2. mri_extract_label  <SUBJECT_NAME>/mri/aseg.mgz 17  <SUBJECT_NAME>/mri/lh.asegHippo.mgz
   3. mri_extract_label  <SUBJECT_NAME>/mri/aseg.mgz 53  <SUBJECT_NAME>/mri/rh.asegHippo.mgz
+
   *Sample code (run matlab from command line with FREESURFER_HOME defined): *
-'''matlab
+```matlab
 basedir = pwd;
 sub = dir('S_*'); 
 hemis = {'lh', 'rh'};
@@ -38,11 +39,11 @@ for h=1:2
         system(cmd);
     end
 end
-'''
+```
   4. This will create the lh.asegHippo.mgz and rh.asegHippo.mgz inside the mri folder of each subject in your experiment. 
   5. Do quality check in this step: if aseg didn't do a good job remove the subject. 
 
-2. Run the segmentation
+### 2. Run the segmentation
   1. Go to the SUBJECTS_DIR in Matlab
   2. Write in the command line: edit hip_run.m
   3. Edit at least the wildcard to detect all your subjects in the folder, the rest of the short version options are explained in the file. 
@@ -52,7 +53,7 @@ OUTPUT: the stat file will be a csv file in SUBJECTS_DIR/hippovol/, and as said 
 
 
 
-HOW-TO: Long Version
+## HOW-TO: Long Version
 This code has been used to generate all the data in the above mentioned paper, and it allows to many more options than above. 
 Every option should be explained in hip_run.m.
 NOTE 1: You will have result based on aseg. I've used other options: for example, adding all the hippo-subfields from version FS 5.3, and the resulting hippocampus it is a little bit more refined than the original aseg version. I am waiting for FS6.0, then I will use the results of the new hippo-subfields code to create new and more refined whole hippocampi by default. Will let you know. In any case, the results are usually highly correlated so hopefully you will find similar results with your data. 
@@ -61,12 +62,10 @@ NOTE 3: There is a beta version of a compiled and Dockerized version available. 
 
 
 
-TODO: 
+## TODOs: 
 - Finish documenting long version options in hip_run.m
 - Extract hipposubfields with FS6 and create whole hippocampus automatically out of it as a default.
 - Publish compiled and Dockerized version
-
-
 
 
 
