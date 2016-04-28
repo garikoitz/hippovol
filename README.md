@@ -4,10 +4,10 @@ This code was created to automatically segment MRI hippocampal T1-w images.
 The hippocampal images are segmented from the brain either manually or using tools available in the communty such as Freesurfer (already tested) or FSL. 
 Althought the main focus of the development of the tool has been the hippocampus, it can be applied to any c-shaped elongated structure, such as the corpus callosum. 
 
-The code has been use to generate all the data in the following paper (if you use this tool please cite it as) :
-Lerma-Usabiaga, G., Iglesias, J.E., Insausti, R., Greve, D., & Paz-Alonso. P.M. (2016).
-Automated segmentation of the human hippocampus along its longitudinal axis. 
-Human Brain Mapping (in Press)
+The code has been use to generate all the data in the following paper (if you use this tool please cite it as):
+  Lerma-Usabiaga, G., Iglesias, J.E., Insausti, R., Greve, D., & Paz-Alonso. P.M. (2016). Automated segmentation of the human hippocampus along its longitudinal axis. Human Brain Mapping (in Press)
+If you have any questions please write an email to: 
+  Garikoitz Lerma-Usabiaga: garikoitz@gmail.com
 
 
 
