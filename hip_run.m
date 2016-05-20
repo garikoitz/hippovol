@@ -14,7 +14,7 @@ clear all; close all; clc;
 % option specified here. 
 
 % Wildcard to select all the subjects you are interested. 
-sub = dir('S_*'); 
+sub = dir('S*'); 
 
 % Although the default method and that imitates best the manual procedures is
 % the 'PCA' method, the 'Bezier' method is available. This method creates a
@@ -38,7 +38,7 @@ WRITE_MGZ = 0;
 structName = 'HIPPO'; 
 
 % If we make minor changes we can save them all with different revisions
-sufixName = 'v01'; 
+sufixName = 'v02'; 
 
 % END OF SHORT VERSION OPTIONS
 
@@ -81,7 +81,7 @@ mydecimate = 5; % decimation in Bezier function
 
 % it can be 'aseg', 'koen', 'eug1', save filenames according to convention 
 % so it can be read automatically by hippovol
-orig_datos   = 'koen';
+orig_datos   = 'aseg';
 SUBJECTS_DIR = basedir;
 
 % It will save the stats in this folder
