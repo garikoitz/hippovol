@@ -3,7 +3,7 @@
 This code was created to automatically segment MRI hippocampal T1-w images. 
 The hippocampal images are segmented from the brain either manually or using tools available in the communty such as Freesurfer (already tested) or FSL. 
 
-** We are upgrading the code, for prompt request contact me at: **
+**We are upgrading the code, for prompt request contact me at:**
  > Garikoitz Lerma-Usabiaga: garikoitz@gmail.com
 
 
