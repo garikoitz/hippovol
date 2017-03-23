@@ -47,14 +47,17 @@ hd = hip_InitMethod(hip_Data);
     %par
     for nsub = 1:numSub
         % sujetos = sub; % specifying for parfor
-        subject_path = [hd.SUBJECTS_DIR filesep hd.subjects(nsub).name filesep 'mri'];
+        if strcmp(hd.orig_datos, 'manual')
+            subject_path = [hd.SUBJECTS_DIR filesep hd.subjects(nsub).name];
+        else
+            subject_path = [hd.SUBJECTS_DIR filesep hd.subjects(nsub).name filesep 'mri'];
+        end
         valores = zeros(1,8); % Initialize each value to zero
         valoresPERC = zeros(1,2);
         % hd.subjects(nsub).name
         % Do it per each hemisphere
         for h=1:length(hd.hemi)
-
-            % READ THE DATA FOR THIS SUBJECT
+            %% READ THE DATA FOR THIS SUBJECT
             M = hip_readM(hd, subject_path, h);
             % For Landmark, read the uncal apex landmark
             if(strcmp(hd.method, 'Landmark'))
@@ -92,7 +95,7 @@ hd = hip_InitMethod(hip_Data);
                 error('This is not a recognized METHOD');
             end    
 
-            % CALCULATIONS DEPENDING ON THE METHOD
+            %% CALCULATIONS DEPENDING ON THE METHOD
             % The name of the function to call has been defined in the
             % hip_InitMethod function
             
@@ -134,8 +137,6 @@ hd = hip_InitMethod(hip_Data);
             % Save the volumetric values and send them back 
             valores(hd.hemivalor4{h}) = [sum(M.vol(:)),  sum(HEAD.vol(:)), ...
                                          sum(BODY.vol(:)), sum(TAIL.vol(:))];
-            
-
         end
         % Save results in variable outside parfor to write it afterwards
         % per each subject

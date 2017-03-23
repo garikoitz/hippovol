@@ -2,7 +2,9 @@
 % BCBL. Basque Center on Cognition, Brain and Language. 
 % 2016
 % Contact: garikoitz@gmail.com
-% hippovol v0.1
+% hippovol v0.1: - first version online
+% hippovol v0.2: - added the option 'manual' for the manual segmentations
+%                -                     created option 'fs5' and 'fs6' as well
 
 clear all; close all; clc;
 
@@ -13,8 +15,17 @@ clear all; close all; clc;
 % calculations done per every subject. The written logfiles will store all the
 % option specified here. 
 
+% NOTE FOR MANUAL: 
+% -- rename all your files so that they start with lh. or rh, this way it
+%    will generate a results file with lh and rh separated for statistical
+%    analysis. 
+% -- in v0.2: ALL SUBJECTS NEED BOTH lh. and rh. 
+
 % Wildcard to select all the subjects you are interested. 
-sub = dir('S_*'); 
+sub = dir('*h.HC_*'); 
+% sub = dir('S_*'); 
+
+
 
 % Although the default method and that imitates best the manual procedures is
 % the 'PCA' method, the 'Bezier' method is available. This method creates a
@@ -79,9 +90,12 @@ DEBUG=0;    % 1 for showing the plots of the images
 orden = 2; % order for Bezier function
 mydecimate = 5; % decimation in Bezier function
 
-% it can be 'aseg', 'koen', 'eug1', save filenames according to convention 
-% so it can be read automatically by hippovol
-orig_datos   = 'koen';
+% It has been tested for:
+% 'fsaseg': use the results from freesurfer's aseg segmentation. any version
+% 'fs5': freesurfer's hipposubfield segmentation, version 5
+% 'fs6': fs 6's hipposubfield implementation, recommended but not tested yet. It will be the default when tested. 
+% 'manual': manual segmentation binary masks
+orig_datos   = 'manual';
 SUBJECTS_DIR = basedir;
 
 % It will save the stats in this folder
@@ -90,6 +104,17 @@ mat_dirs = [glm_datos_dir filesep 'mats'];
 mkdirquiet(glm_datos_dir);
 mkdirquiet(mat_dirs);
 
+%% Launch the calculations
+% Huge for used when testing. In normal use it will only launch one process per
+% hippocampi
+
+% If the 'manual' option was used, separate the subjects with the lh and rh
+if strcmp(orig_datos, 'manual')
+    sub = sub(1:(length(sub)/2));
+    for ns = 1:length(sub)
+        sub(ns).name = strrep(sub(ns).name, 'lh.', '')
+    end
+end
 
 for jj=1:length(methods)
     method = methods{jj};

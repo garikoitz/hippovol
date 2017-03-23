@@ -5,7 +5,7 @@ function M = hip_readM(d, sp, h)
 %   variables
 %   d   = structure with all relevant data to this calculation
 %   sp  = Subject_Path: mri path where the hipposubfields are
-%   sp = subject_path
+%   h   = hemi, if relevant
 %
 % (C) Garikoitz Lerma-Usabiaga
 % BCBL. Basque Center on Cognition, Brain and Language. 
@@ -13,41 +13,49 @@ function M = hip_readM(d, sp, h)
 % Contact: garikoitz@gmail.com
 
     sel = '';
-    if strcmp(d.orig_datos, 'aseg')
-        hemi1 = d.hemi{h}(1);
-        if  strcmp(d.method, 'Landmark')
-            rater = d.lta(1);
-            meth = d.lta(2:end); 
-            if strcmp(meth, 'Acqu')
-                sel = '';
-            elseif nnz(strcmp(meth, {'T1', 'T2'}))
-                sel = ['_inter_' hemi1 rater meth(end)];
-            elseif nnz(strcmp(meth, {'PCA1', 'PCA2'}))
-                sel = ['_inter_' meth(1:3) d.hemi{h}];
+    switch d.orig_datos
+        case {'aseg'}
+            hemi1 = d.hemi{h}(1);
+            if  strcmp(d.method, 'Landmark')
+                rater = d.lta(1);
+                meth = d.lta(2:end); 
+                if strcmp(meth, 'Acqu')
+                    sel = '';
+                elseif nnz(strcmp(meth, {'T1', 'T2'}))
+                    sel = ['_inter_' hemi1 rater meth(end)];
+                elseif nnz(strcmp(meth, {'PCA1', 'PCA2'}))
+                    sel = ['_inter_' meth(1:3) d.hemi{h}];
+                end
+            elseif  strcmp(d.method, 'MNI')
+                sel = '_interfloat_MNI';
+            else 
+                if strcmp(d.lta, 'Acqu')
+                    sel = '';
+                elseif nnz(strcmp(d.lta, {'A', 'B', 'A1', 'A2', 'B1', 'B2'}))
+                    sel = ['_inter_' hemi1 d.lta];
+                elseif strcmp(d.lta, 'PCA')
+                    sel = ['_inter_' d.lta d.hemi{h}];
+                end
             end
-        elseif  strcmp(d.method, 'MNI')
-            sel = '_interfloat_MNI';
-        else 
-            if strcmp(d.lta, 'Acqu')
-                sel = '';
-            elseif nnz(strcmp(d.lta, {'A', 'B', 'A1', 'A2', 'B1', 'B2'}))
-                sel = ['_inter_' hemi1 d.lta];
-            elseif strcmp(d.lta, 'PCA')
-                sel = ['_inter_' d.lta d.hemi{h}];
+            LetuHau = char([sp filesep d.hemi{h} '.asegHippo' sel '.mgz']);
+            M = MRIread2(LetuHau);
+            % In aseg we have 0 and 128 values and we want to have always 0-1
+            M.vol = M.vol / 128;
+
+        case {'fs5'}
+            M = hip_sum_hippo_subfields(sp, d.hemi{h}, 1, d.eliminar_list);
+        case {'fs6'}
+            sp1 = [sp filesep 'posteriors-fixed-subfields']
+            M = hip_sum_hippo_subfields(sp1, d.hemi{h}, 1, d.eliminar_list);
+        case {'manual'}
+            [p,f,e] = fileparts(sp);
+            M = MRIread2([p filesep d.hemi{h} '.' f e]);
+            unicos = unique(M.vol); 
+            if 2 ~= size(unicos,1) || 1 ~= unicos(2)
+                error('This is not a binary mask, only 0 and 1 values are accepted')
             end
-        end
-        LetuHau = char([sp filesep d.hemi{h} '.asegHippo' sel '.mgz']);
-        M = MRIread2(LetuHau);
-        % In aseg we have 0 and 128 values and we want to have always 0-1
-        M.vol = M.vol / 128;
-        
-    elseif strcmp(d.orig_datos, 'koen')
-        M = hip_sum_hippo_subfields(sp, d.hemi{h}, 1, d.eliminar_list);
-    elseif strcmp(d.orig_datos, 'eug1')
-        sp1 = [sp filesep 'posteriors-fixed-subfields']
-        M = hip_sum_hippo_subfields(sp1, d.hemi{h}, 1, d.eliminar_list);
+        otherwise
+            error([d.orig_datos ' does not exist: only aseg, fs5, fs6 and manual accepted.'])
     end
-
-
 end
 
