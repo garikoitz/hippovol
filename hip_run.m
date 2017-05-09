@@ -63,7 +63,7 @@ Head_Perc_List = 417;
 % testing mode at first. Write the segments to visualize results and test for
 % accuracy as well, or to be used as seeds in functional connectivity or
 % tractography. 
-WRITE_MGZ = 1;  
+WRITE_MGZ = 0;  
 
 % It will prepend it to the stat files and to the mgz files.
 structName = 'HIPPO'; 
