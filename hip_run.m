@@ -4,7 +4,9 @@
 % Contact: garikoitz@gmail.com
 % hippovol v0.1: - first version online
 % hippovol v0.2: - added the option 'manual' for the manual segmentations
-%                -                     created option 'fs5' and 'fs6' as well
+% hippovol v0.3: - created option 'fs5' and 'fs6' as well
+%                - added option to use existing files with names other than
+%                  asegHippo
 
 clear all; close all; clc;
 
@@ -20,11 +22,30 @@ clear all; close all; clc;
 %    will generate a results file with lh and rh separated for statistical
 %    analysis. 
 % -- in v0.2: ALL SUBJECTS NEED BOTH lh. and rh. 
+% --          Put all files in folders with the subject numbers. 
 
 % Wildcard to select all the subjects you are interested. 
-sub = dir('*h.HC_*'); 
-% sub = dir('S_*'); 
+% Hippocampi have to be in folders and all hippocampi have to be names the same
+sub = dir('S*'); 
+            % Path to file: for freesurfer use 'mri', for manual '' or your file paths
+            hipPath = 'mri';
+            % The name give to the hippocampi, for ex.: 'asegHippo', 'HC_subject'
+            hipName = 'asegHippo'; 
+            % Extension of the file, for ex.: 'mgz', 'nii.gz'
+            hipExt  = 'mgz'; 
+            
+% Origin of the dataset (it has been tested for):
+% 'fsaseg': use the results from freesurfer's aseg segmentation. Any version (tested 5.1, 5.3, 6.0).
+%           The code expects to find the hippocampi in subjectName/mri/ .
+%           The name by default would be ?h.asegHippo.mgz, change it below:
 
+% 'fs5': freesurfer's hipposubfield segmentation, version 5
+%         It will add the subfields to create a more detailed hippocampus.
+%         You can select the subfields used in the reconstruction in the file
+%         hip_sum_hippo_subfields.m
+% 'fs6T1': fs 6's hipposubfield implementation, T1 option. 
+% 'manual': manual segmentation binary masks
+orig_datos   = 'fs6T1';
 
 
 % Although the default method and that imitates best the manual procedures is
@@ -43,7 +64,7 @@ Head_Perc_List = 417;
 % testing mode at first. Write the segments to visualize results and test for
 % accuracy as well, or to be used as seeds in functional connectivity or
 % tractography. 
-WRITE_MGZ = 0;  
+WRITE_MGZ = 1;  
 
 % It will prepend it to the stat files and to the mgz files.
 structName = 'HIPPO'; 
@@ -90,12 +111,6 @@ DEBUG=0;    % 1 for showing the plots of the images
 orden = 2; % order for Bezier function
 mydecimate = 5; % decimation in Bezier function
 
-% It has been tested for:
-% 'fsaseg': use the results from freesurfer's aseg segmentation. any version
-% 'fs5': freesurfer's hipposubfield segmentation, version 5
-% 'fs6': fs 6's hipposubfield implementation, recommended but not tested yet. It will be the default when tested. 
-% 'manual': manual segmentation binary masks
-orig_datos   = 'manual';
 SUBJECTS_DIR = basedir;
 
 % It will save the stats in this folder
@@ -105,16 +120,16 @@ mkdirquiet(glm_datos_dir);
 mkdirquiet(mat_dirs);
 
 %% Launch the calculations
-% Huge for used when testing. In normal use it will only launch one process per
+% Huge when testing. In normal use it will only launch one process per
 % hippocampi
 
-% If the 'manual' option was used, separate the subjects with the lh and rh
-if strcmp(orig_datos, 'manual')
-    sub = sub(1:(length(sub)/2));
-    for ns = 1:length(sub)
-        sub(ns).name = strrep(sub(ns).name, 'lh.', '')
-    end
-end
+% % If the 'manual' option was used, separate the subjects with the lh and rh
+% if strcmp(orig_datos, 'manual')
+%     sub = sub(1:(length(sub)/2));
+%     for ns = 1:length(sub)
+%         sub(ns).name = strrep(sub(ns).name, 'lh.', '')
+%     end
+% end
 
 for jj=1:length(methods)
     method = methods{jj};

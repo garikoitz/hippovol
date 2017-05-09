@@ -26,7 +26,7 @@ function [HEAD, POSTERIOR, BODY, TAIL] = hip_PCAPERCInsausti(d, M, punto)
     % These are the coordinates of my data
     X = [X, Y, Z];
     
-    %[coeff,score] = pca(X, 'Centered', false); %Ejecuto PCA
+    % [coeff,score] = pca(X, 'Centered', false); %Ejecuto PCA
     % Execute Matlab's PCA code
     [coeff,score] = pca(X);
     % Obtain PCA1
@@ -71,19 +71,45 @@ function [HEAD, POSTERIOR, BODY, TAIL] = hip_PCAPERCInsausti(d, M, punto)
      % create planes
     PlaneHead = createPlane(interHead,dirVect'); % Punto y normal
     PlaneTail = createPlane(interTail,dirVect'); % Punto y normal
+    
+    
 
     % Go back from the index to the volume
-    head_ind = (X(:,3)  - ...
-                           ((dirVect(1)*(interHead(1)-X(:,1)) + ... 
-                             dirVect(2)*(interHead(2)-X(:,2)))/dirVect(3) + ...
-                            interHead(3))   ...
-                ) > 0;
+    % I had to hack it in order to handle the manual ones in a different
+    % direction. 
+    % Make it generic
+    switch d.orig_datos
+        
+        case {'fs6T1', 'fs5', 'fsaseg'}
+            head_ind = (X(:,3)  - ...
+                                   ((dirVect(1)*(interHead(1)-X(:,1)) + ... 
+                                     dirVect(2)*(interHead(2)-X(:,2)))/dirVect(3) + ...
+                                    interHead(3))   ...
+                        ) > 0;
+
+            notail_ind = (X(:,3) - ...
+                            ((dirVect(1)*(interTail(1)-X(:,1)) + ...
+                              dirVect(2)*(interTail(2)-X(:,2)))/dirVect(3) + ...
+                             interTail(3)) ...   
+                          ) > 0;
+        case {'manual'}
+            head_ind = (X(:,2)  - ...
+                                   ((dirVect(1)*(interHead(1)-X(:,1)) + ... 
+                                     dirVect(3)*(interHead(3)-X(:,3)))/dirVect(2) + ...
+                                    interHead(2))   ...
+                        ) > 0;
+
+            notail_ind = (X(:,2) - ...
+                            ((dirVect(1)*(interTail(1)-X(:,1)) + ...
+                              dirVect(3)*(interTail(3)-X(:,3)))/dirVect(2) + ...
+                             interTail(2)) ...   
+                          ) > 0;
+        otherwise
+            error('This orientation is not implemented');
+    end
+              
             
-    notail_ind = (X(:,3) - ...
-                    ((dirVect(1)*(interTail(1)-X(:,1)) + ...
-                      dirVect(2)*(interTail(2)-X(:,2)))/dirVect(3) + ...
-                     interTail(3)) ...   
-                  ) > 0;
+              
     body_ind = (~head_ind == notail_ind);
 
     N = M;
@@ -103,13 +129,33 @@ function [HEAD, POSTERIOR, BODY, TAIL] = hip_PCAPERCInsausti(d, M, punto)
     if d.DEBUG > 0
         
         
-        
+        % Before segmentation
         figure(1), p=patch(isosurface(M.vol)); isonormals(M.vol, p)
         set(p,'FaceColor', [0 0 1], 'EdgeColor', [0.5 0.5 0.5], 'facealpha',0.2,'edgealpha',0.9); 
         
+        % axis equal
+        hold on
+        drawLine3d(linePCA1,'LineWidth',5)
+        % drawPoint3d(endpts(1,:));
+        % drawPoint3d(endpts(2,:));
+        drawPoint3d(PuntoMin,'MarkerFaceColor','g','MarkerSize',10);
+        drawPoint3d(PuntoMax,'MarkerFaceColor','g','MarkerSize',10);
+        % drawPoint3d(meanX);
+        planeMeanX = createPlane(meanX, dirVect');
+        % drawPlane3d(planeMeanX)
+        drawPoint3d(interMin,'MarkerFaceColor','r','MarkerSize',10);
+        drawPoint3d(interMax,'MarkerFaceColor','r','MarkerSize',10);
+%         drawPlane3d(PlaneHead)
+%         drawPlane3d(PlaneTail)
+        drawPoint3d(interHead,'MarkerFaceColor','r','MarkerSize',10);
+        drawPoint3d(interTail,'MarkerFaceColor','g','MarkerSize',10);
+        
+        
+        
+        % After segmmentation
         figure(2), p=patch(isosurface(HEAD.vol)); isonormals(HEAD.vol, p)
         set(p,'FaceColor', [0 1 0], 'EdgeColor', [0.5 0.5 0.5], 'facealpha',0.2,'edgealpha',0.9); 
-        
+        hold on
         figure(2), p=patch(isosurface(BODY.vol)); isonormals(BODY.vol, p)
         set(p,'FaceColor', [1 0 1], 'EdgeColor', [0.5 0.5 0.5], 'facealpha',0.2,'edgealpha',0.9); 
         
@@ -121,6 +167,8 @@ function [HEAD, POSTERIOR, BODY, TAIL] = hip_PCAPERCInsausti(d, M, punto)
         hold on
         drawLine3d(linePCA1,'LineWidth',5)
         planePCA1 = medianPlane(endpts(1,:), endpts(2,:));
+        drawPlane3d(PlaneHead);
+        drawPlane3d(PlaneTail);
 
         drawPlane3d(PlaneHead, 'FaceColor', [0 0 1], 'EdgeColor', [0.5 0.5 0.5], 'facealpha',0.2,'edgealpha',0.9)
         drawPlane3d(PlaneTail, 'FaceColor', [1 0 0], 'EdgeColor', [0.5 0.5 0.5], 'facealpha',0.2,'edgealpha',0.9)

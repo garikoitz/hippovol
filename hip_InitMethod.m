@@ -59,7 +59,23 @@
                        'posterior_right_hippocampal_fissure.mgz'
                        'posterior_Right-Cerebral-Cortex.mgz'
                        'posterior_Right-Cerebral-White-Matter.mgz'};
-
+    d.fs6_include_list = {  '201' % alveus
+                            '203' % parasubiculum
+                            '204' % presubiculum
+                            '205' % subiculum
+                            '206' % CA1
+                            '207' % CA2
+                            '208' % CA3
+                            '209' % CA4
+                            '210' % GC-DG
+                            % '211' % HATA
+                            '212' % fimbria
+                            '214' % molecular_layer_HP
+                            % '215' % hippocampal_fissure
+                            '226' % HP_tail
+                            };
+                   
+                   
     % We create the string with the function name to call to solve this problem
     d.fName = strcat('hip_', d.methodName);
     

@@ -37,23 +37,25 @@ function M = hip_readM(d, sp, h)
                     sel = ['_inter_' d.lta d.hemi{h}];
                 end
             end
-            LetuHau = char([sp filesep d.hemi{h} '.asegHippo' sel '.mgz']);
+            LetuHau = char([sp filesep d.hemi{h} '.' d.hipName sel '.' d.hipExt]);
             M = MRIread2(LetuHau);
             % In aseg we have 0 and 128 values and we want to have always 0-1
             M.vol = M.vol / 128;
 
         case {'fs5'}
             M = hip_sum_hippo_subfields(sp, d.hemi{h}, 1, d.eliminar_list);
-        case {'fs6'}
-            sp1 = [sp filesep 'posteriors-fixed-subfields']
-            M = hip_sum_hippo_subfields(sp1, d.hemi{h}, 1, d.eliminar_list);
+        case {'fs6T1'}
+            M = hip_sum_hippo_subfieldsfs6(sp, d.hemi{h}, 1, d.fs6_include_list);
         case {'manual'}
-            [p,f,e] = fileparts(sp);
-            M = MRIread2([p filesep d.hemi{h} '.' f e]);
+            LetuHau = char([sp filesep d.hemi{h} '.' d.hipName sel '.' d.hipExt]);
+            % [p,f,e] = fileparts(sp);
+            % M = MRIread2([p filesep d.hemi{h} '.' f e]);
+            M = MRIread2(LetuHau);
             unicos = unique(M.vol); 
             if 2 ~= size(unicos,1) || 1 ~= unicos(2)
                 error('This is not a binary mask, only 0 and 1 values are accepted')
             end
+            
         otherwise
             error([d.orig_datos ' does not exist: only aseg, fs5, fs6 and manual accepted.'])
     end
