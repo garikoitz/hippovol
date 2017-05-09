@@ -69,6 +69,7 @@ end
                             % '215' % hippocampal_fissure
                             '226' % HP_tail
 ```
+   - The hip_sum_hippo_subfieldsfs6.m function will extract using the 'mri_extract_label' function the labes not commented above from the ?h.hippoSfLabels-T1.v10.mgz file and create a new file with just 0-s and 1-s, that will be segmented.
 
 ### 2. Run the segmentation
   1. Go to the SUBJECTS_DIR in Matlab
