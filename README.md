@@ -49,6 +49,12 @@ end
   - This will create the lh.asegHippo.mgz and rh.asegHippo.mgz inside the mri folder of each subject in your experiment. 
   - Do quality check in this step: if aseg didn't do a good job remove the subject. 
 
+#### 1.b If you want to use the FS6 hippocampal subfields
+   -  Select orig_datos = 'fs6' in the file hip_run.m
+   -  In the hip_InitMethod.m file, comment the subfields you are not interested in. 
+   -  By default, these are the subfields included in the new hippocampi:
+       - 
+
 ### 2. Run the segmentation
   1. Go to the SUBJECTS_DIR in Matlab
   2. Write in the command line: `edit hip_run.m`
