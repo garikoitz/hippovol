@@ -50,10 +50,25 @@ end
   - Do quality check in this step: if aseg didn't do a good job remove the subject. 
 
 #### 1.b If you want to use the FS6 hippocampal subfields
-   -  Select orig_datos = 'fs6' in the file hip_run.m
+   -  Select orig_datos = 'fs6T1' in the file hip_run.m
    -  In the hip_InitMethod.m file, comment the subfields you are not interested in. 
    -  By default, these are the subfields included in the new hippocampi:
-       - 
+```matlab
+                            '201' % alveus
+                            '203' % parasubiculum
+                            '204' % presubiculum
+                            '205' % subiculum
+                            '206' % CA1
+                            '207' % CA2
+                            '208' % CA3
+                            '209' % CA4
+                            '210' % GC-DG
+                            % '211' % HATA
+                            '212' % fimbria
+                            '214' % molecular_layer_HP
+                            % '215' % hippocampal_fissure
+                            '226' % HP_tail
+```
 
 ### 2. Run the segmentation
   1. Go to the SUBJECTS_DIR in Matlab
