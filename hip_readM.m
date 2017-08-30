@@ -53,7 +53,9 @@ function M = hip_readM(d, sp, h)
             M = MRIread2(LetuHau);
             unicos = unique(M.vol); 
             if 2 ~= size(unicos,1) || 1 ~= unicos(2)
-                error('This is not a binary mask, only 0 and 1 values are accepted')
+                disp('This is not a binary mask, only 0 and 1 values are accepted')
+                disp('Converting volume to 0-s and 1-s')
+                M.vol(M.vol>0) = 1;
             end
             
         otherwise

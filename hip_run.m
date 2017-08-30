@@ -28,11 +28,11 @@ clear all; close all; clc;
 % Hippocampi have to be in folders and all hippocampi have to be names the same
 sub = dir('S*'); 
             % Path to file: for freesurfer use 'mri', for manual '' or your file paths
-            hipPath = 'mri';
+            hipPath = '';
             % The name give to the hippocampi, for ex.: 'asegHippo', 'HC_subject'
-            hipName = 'asegHippo'; 
+            hipName = 'hippocampus'; 
             % Extension of the file, for ex.: 'mgz', 'nii.gz'
-            hipExt  = 'mgz'; 
+            hipExt  = 'nii'; 
             
 % Origin of the dataset (it has been tested for):
 % 'fsaseg': use the results from freesurfer's aseg segmentation. Any version (tested 5.1, 5.3, 6.0).
@@ -45,7 +45,7 @@ sub = dir('S*');
 %         hip_sum_hippo_subfields.m
 % 'fs6T1': fs 6's hipposubfield implementation, T1 option. 
 % 'manual': manual segmentation binary masks
-orig_datos   = 'fs6T1';
+orig_datos   = 'manual';
 
 
 % Although the default method and that imitates best the manual procedures is
