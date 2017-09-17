@@ -39,9 +39,10 @@ function [HEAD, POSTERIOR, BODY, TAIL] = hip_PCAPERCInsausti(d, M, punto)
 
     [PMin,IndMin] = min(score(:,1));
     [PMax,IndMax] = max(score(:,1));
+    
     % Most extreme points for plane
     PuntoMin =  round(meanX + score(IndMin,:,:)*coeff'); 
-    PuntoMax = round(meanX + score(IndMax,:,:)*coeff'); 
+    PuntoMax =  round(meanX + score(IndMax,:,:)*coeff'); 
 
     if ~(ismember(PuntoMin,X,'rows') && ismember(PuntoMax,X,'rows') )
             error('Maximun and Minimum are not in the structure');
@@ -80,7 +81,7 @@ function [HEAD, POSTERIOR, BODY, TAIL] = hip_PCAPERCInsausti(d, M, punto)
     % Make it generic
     switch d.orig_datos
         
-        case {'fs6T1', 'fs5', 'fsaseg'}
+        case {'fs6', 'fs5', 'fsaseg'}
             head_ind = (X(:,3)  - ...
                                    ((dirVect(1)*(interHead(1)-X(:,1)) + ... 
                                      dirVect(2)*(interHead(2)-X(:,2)))/dirVect(3) + ...

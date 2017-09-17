@@ -32,7 +32,8 @@ hip_Data = struct('methodName'   , methodName(1), ...
                   'hipPath'      , hipPath, ...
                   'hipName'      , hipName, ...
                   'hipExt'       , hipExt, ...
-                  'perc', perc);
+                  'voxel_size'   , voxel_size, ...
+                  'perc'         , perc);
 hip_Data.rater = Rater;
 hip_Data.subjects = sub;
 numSub = length(sub);
@@ -116,13 +117,13 @@ hd = hip_InitMethod(hip_Data);
                         valoresPERC(h) = perc;  
                     end    
                 otherwise
-                    if isdeployed
+                    if isdeployed  % If the code is compiled
                         if(strcmp(hd.orientation, 'Bezier'))
                             [HEAD, POSTERIOR, BODY, TAIL] = hip_BezierPERCInsausti(hd, M, punto);
                         elseif(strcmp(hd.orientation, 'PCA'))
                             [HEAD, POSTERIOR, BODY, TAIL] = hip_PCAPERCInsausti(hd, M, punto);
                         end
-                    else
+                    else  % IF code not compiled
                         fhandle = str2func(hd.fName);
                         [HEAD, POSTERIOR, BODY, TAIL] = fhandle(hd, M, punto);
                     end                    
@@ -131,15 +132,21 @@ hd = hip_InitMethod(hip_Data);
             if hd.WRITE_MGZ > 0 % == true write the volumes to file
                 disp('Calling function to write mgz labels...');
                 resp = hip_writeM(HEAD, POSTERIOR, BODY, TAIL, hd, subject_path, h); 
-                disp(resp);
+                if strcmp(resp,'DONE')
+                    disp('If you dont want the files written change WRITE_MGZ option in hip_run.');
+                else
+                    disp('The files could not be written');
+                end
             end
 
             % Save the volumetric values and send them back 
-            if strcmp(hd.orig_datos, 'fs6T1')
-                valores(hd.hemivalor4{h}) = [round(sum(M.vol(:))/27),  ...
-                                             round(sum(HEAD.vol(:))/27), ...
-                                             round(sum(BODY.vol(:))/27), ...
-                                             round(sum(TAIL.vol(:))/27)];
+            if strcmp(hd.orig_datos, 'fs6')
+                % Calculate multiplier to correct for voxel size 
+                voxSizeCorrect = 1/hd.voxel_size^3;
+                valores(hd.hemivalor4{h}) = [round(sum(M.vol(:))/voxSizeCorrect),  ...
+                                             round(sum(HEAD.vol(:))/voxSizeCorrect), ...
+                                             round(sum(BODY.vol(:))/voxSizeCorrect), ...
+                                             round(sum(TAIL.vol(:))/voxSizeCorrect)];
             else
                 valores(hd.hemivalor4{h}) = [round(sum(M.vol(:))),  sum(HEAD.vol(:)), ...
                                          sum(BODY.vol(:)), sum(TAIL.vol(:))];

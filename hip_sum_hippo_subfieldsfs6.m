@@ -1,4 +1,4 @@
-function [ M ] = hip_sum_hippo_subfieldsfs6(mripath, hemi, discreto, include_list)
+function [ M ] = hip_sum_hippo_subfieldsfs6(mripath, hemi, discreto, include_list, hipName)
 % Returns a FS volume extracting the labels from the hippocampal-subfields results file. 
 
 %   OUTPUT:
@@ -41,16 +41,35 @@ function [ M ] = hip_sum_hippo_subfieldsfs6(mripath, hemi, discreto, include_lis
     
     % Extract the hippo subfields
     
-    fileNameIN  = [mripath filesep hemi '.hippoSfLabels-T1.v10.mgz']; 
-    fileNameOUT = [mripath filesep hemi '.hippoSfLabels-T1.v10_SOLOHIP.mgz']; 
+    fileNameIN  = [mripath filesep hemi '.' hipName '.mgz']; 
+    fileNameOUT = [mripath filesep hemi '.' hipName '_SOLOHIP.mgz']; 
     labels2extract = strjoin(include_list);
     cmd = ['mri_extract_label ' fileNameIN ' '  labels2extract ' '  fileNameOUT];
     system(cmd)
     % Convert to binary
     % read 1 in order to have a volume
-    M = MRIread2([mripath filesep hemi '.hippoSfLabels-T1.v10_SOLOHIP.mgz']);
-    
+    if exist(fileNameOUT, 'file')
+        % When using fs6 default 0.33 (non VoxelSpace) files, I've seen that they
+        % are changed from LIA orientation to LIP. 
+        % Check if the file is LIP, if so, change it to LIA
+        [status,result] = system(['mri_info --orientation ' fileNameOUT]);
+        if strcmp(result(1:3), 'LIP')
+            system(['mri_convert --out_orientation LIA ' fileNameOUT ' ' mripath filesep hemi '.temp.mgz'])
+            % delete fileNameOUT;
+            movefile([mripath filesep hemi '.temp.mgz'], fileNameOUT)
+        end
+        
+        M = MRIread2(fileNameOUT);
+        
+    else
+        error(['Could not find file: ' fileNameOUT ', most probable cause is that mri_extract_label could not execute. Make sure that Freesurfer is installed and in the path. In Mac you might need to start Matlab from the command line to be able to read the environment variables. If it does not work harcode the whole path of the mri_extract_label file in your system. This is the code it is trying to run if you need to launch it manually, the important thing is to have a binay hippocampus: ' cmd])
+    end
    
+    
+    
+    
+    
+    
     % If we want to return it binarized
     if discreto == 1
         M.vol(M.vol<128)=0;

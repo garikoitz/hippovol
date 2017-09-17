@@ -29,12 +29,12 @@ elseif(strcmp(d.method, 'Landmark'))
 else        
     ForName = char([d.methodName '.' d.orig_datos '.'  d.hemi{h} '.' d.bblta]);
 end
-    
-    MRIwrite(HEAD,      char([sp filesep ForName '.head.hippovol.mgz']));
-    disp(['File written: ' sp filesep ForName '.head.hippovol.mgz']);
-    MRIwrite(POSTERIOR, char([sp filesep ForName '.posterior.hippovol.mgz']));
-    MRIwrite(BODY,      char([sp filesep ForName '.body.hippovol.mgz']));
-    MRIwrite(TAIL,      char([sp filesep ForName '.tail.hippovol.mgz']));
+    disp(['Writing files...']);
+    MRIwrite(HEAD,      char([sp filesep ForName '.head.hippovol_' d.sufixName '.mgz']));
+    MRIwrite(POSTERIOR, char([sp filesep ForName '.posterior.hippovol_' d.sufixName '.mgz']));
+    MRIwrite(BODY,      char([sp filesep ForName '.body.hippovol_' d.sufixName '.mgz']));
+    MRIwrite(TAIL,      char([sp filesep ForName '.tail.hippovol_' d.sufixName '.mgz']));
     resp = 'DONE';
+    disp(['... finished writing files in ' sp]);
 end
 

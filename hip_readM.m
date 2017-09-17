@@ -44,8 +44,8 @@ function M = hip_readM(d, sp, h)
 
         case {'fs5'}
             M = hip_sum_hippo_subfields(sp, d.hemi{h}, 1, d.eliminar_list);
-        case {'fs6T1'}
-            M = hip_sum_hippo_subfieldsfs6(sp, d.hemi{h}, 1, d.fs6_include_list);
+        case {'fs6'}
+            M = hip_sum_hippo_subfieldsfs6(sp, d.hemi{h}, 1, d.fs6_include_list, d.hipName);
         case {'manual'}
             LetuHau = char([sp filesep d.hemi{h} '.' d.hipName sel '.' d.hipExt]);
             % [p,f,e] = fileparts(sp);

@@ -30,9 +30,10 @@ sub = dir('S*');
             % Path to file: for freesurfer use 'mri', for manual '' or your file paths
             hipPath = '';
             % The name give to the hippocampi, for ex.: 'asegHippo', 'HC_subject'
-            hipName = 'hippocampus'; 
+            % hipName = 'hippoSfLabels-T1-T2_woresampling.v10.FSvoxelSpace';
+            hipName = 'hippoSfLabels-T1-T2_woresampling.v10';
             % Extension of the file, for ex.: 'mgz', 'nii.gz'
-            hipExt  = 'nii'; 
+            hipExt  = 'mgz'; 
             
 % Origin of the dataset (it has been tested for):
 % 'fsaseg': use the results from freesurfer's aseg segmentation. Any version (tested 5.1, 5.3, 6.0).
@@ -43,9 +44,12 @@ sub = dir('S*');
 %         It will add the subfields to create a more detailed hippocampus.
 %         You can select the subfields used in the reconstruction in the file
 %         hip_sum_hippo_subfields.m
-% 'fs6T1': fs 6's hipposubfield implementation, T1 option. 
+% 'fs6': fs 6's hipposubfield implementation. 
+%          Requires specifying isotropic voxel size, 0.33 if fs6-s default or your 
+%          acquisition's voxel size (required for volume correction)
 % 'manual': manual segmentation binary masks
-orig_datos   = 'manual';
+orig_datos   = 'fs6';
+voxel_size = 0.3333;  % default 0.33 for fs6, otherwise voxelspace 
 
 
 % Although the default method and that imitates best the manual procedures is
@@ -70,7 +74,7 @@ WRITE_MGZ = 1;
 structName = 'HIPPO'; 
 
 % If we make minor changes we can save them all with different revisions
-sufixName = 'v01'; 
+sufixName = 'v033mmFS6'; 
 
 % END OF SHORT VERSION OPTIONS
 
