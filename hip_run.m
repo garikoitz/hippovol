@@ -7,9 +7,14 @@
 % hippovol v0.3: - created option 'fs5' and 'fs6' as well
 %                - added option to use existing files with names other than
 %                  asegHippo
+% DM 12/4/17 cc: - added code to segment corpus callosum (cc) into n segments & 
+%                  write out as volumes
+%
 
 clear all; close all; clc;
 
+% DM 12/4/17 cc anat = 'cc' will run cc code; anat = 'hipp' will run hipp code
+anat = 'cc';
 
 %% SHORT VERSION OPTIONS (see README.md)
 
@@ -45,7 +50,8 @@ sub = dir('S*');
 %         hip_sum_hippo_subfields.m
 % 'fs6T1': fs 6's hipposubfield implementation, T1 option. 
 % 'manual': manual segmentation binary masks
-orig_datos   = 'fs6T1';
+% 'cc': cc segmentation into n segments DM 12/4/17 cc  
+orig_datos   = 'cc';
 
 % Although the default method and that imitates best the manual procedures is
 % the 'PCA' method, the 'Bezier' method is available. This method creates a
@@ -57,16 +63,18 @@ orientations = {'PCA'};  % Obtain both in the same call using {'Bezier', 'PCA'}
 % freesurfer's aseg, but it depends on your biological assumptions. 
 % If introduced as a list, it will calculate all the different percentages, for
 % example 201:1:800 or [401 451]. It will add the 
-Head_Perc_List = 417; 
+%Head_Perc_List = 417;
+Head_Perc_List = 333; % DM 12/4/17 cc - want equal-length segments so choose 33.3?
 
 % 1: to write the mgz-s to file. 0: to obtain just the stats. Set it to zero in
 % testing mode at first. Write the segments to visualize results and test for
 % accuracy as well, or to be used as seeds in functional connectivity or
 % tractography. 
-WRITE_MGZ = 0;  
+WRITE_MGZ = 1;  
 
 % It will prepend it to the stat files and to the mgz files.
-structName = 'HIPPO'; 
+%structName = 'HIPPO';
+structName = 'CC'; % DM 12/4/17 cc
 
 % If we make minor changes we can save them all with different revisions
 sufixName = 'v02'; 
