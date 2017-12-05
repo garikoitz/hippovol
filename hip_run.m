@@ -7,7 +7,7 @@
 % hippovol v0.3: - created option 'fs5' and 'fs6' as well
 %                - added option to use existing files with names other than
 %                  asegHippo
-% DM 12/4/17 cc: - added code to segment corpus callosum (cc) into n segments & 
+% DM 12/4/17 cc: - adding code to segment corpus callosum (cc) into n segments & 
 %                  write out as volumes
 %
 
@@ -57,7 +57,7 @@ orig_datos   = 'cc';
 % the 'PCA' method, the 'Bezier' method is available. This method creates a
 % curved axis that follows better the c-shape of the hippocampus (see paper).
 % There is another option 'Acqu', see below. 
-orientations = {'PCA'};  % Obtain both in the same call using {'Bezier', 'PCA'}
+orientations = {'Bezier', 'PCA'};  % Obtain both in the same call using {'Bezier', 'PCA'}
 
 % Percentage of length to segment head. 41.7% was the average on the paper for 
 % freesurfer's aseg, but it depends on your biological assumptions. 
@@ -77,7 +77,8 @@ WRITE_MGZ = 1;
 structName = 'CC'; % DM 12/4/17 cc
 
 % If we make minor changes we can save them all with different revisions
-sufixName = 'v02'; 
+%sufixName = 'v02'; 
+sufixName = 'cc';
 
 % END OF SHORT VERSION OPTIONS
 
