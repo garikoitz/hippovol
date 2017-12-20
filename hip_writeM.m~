@@ -23,7 +23,7 @@ function resp = hip_writeM(HEAD, POSTERIOR, BODY, TAIL, d, sp, h)
 %     within the CATCH statements, execution stops, unless caught by another 
 %     try...CATCH block. The ME argument is optional. 
 
-% DM 12/4/17 - add option to skip hemisphere naming convention
+% DM 12/4/17 - added option to skip hemisphere naming convention
 if(strcmp(d.orig_datos, 'cc'));
     if(strcmp(d.method, 'PERC'))
         ForName = char([d.methodName '.' d.orig_datos '.' num2str(d.perc)]);
@@ -41,7 +41,7 @@ if(strcmp(d.orig_datos, 'cc'));
         resp = 'DONE';
 
     
-elseif isfiled(d.hemi{h});
+elseif isfield(d.hemi{h});
     if(strcmp(d.method, 'PERC'))
         ForName = char([d.methodName '.' d.orig_datos '.'  d.hemi{h} '.' num2str(d.perc)]);
     elseif(strcmp(d.method, 'Landmark'))

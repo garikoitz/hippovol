@@ -57,9 +57,9 @@ function M = hip_readM(d, sp, h)
             end
         % DM 12/4/17 cc    
         case {'cc'}
-            M = cc_sum(sp, 1);    
+            M = hip_sum_hippo_subfieldsfs6(sp, d.hemi{h}, 1, d.fs6_include_list);    
         otherwise
-            error([d.orig_datos ' does not exist: only aseg, fs5, fs6, cc and manual accepted.'])
+            error([d.orig_datos ' does not exist: only aseg, fs5, fs6 and manual accepted.'])
     end
 end
 
