@@ -15,11 +15,6 @@ clear all; close all; clc;
 
 %SUBJECTS_DIR='/add/path'
 SUBJECTS_DIR='/Volumes/disk_3/JGG_test_proc_dir/fs_51_reproc_in_53';
-%DATA_DIR='/add/path'
-DATA_DIR='/Volumes/Macintosh_HD_2/JGG_AL_LZ_structural_connectome';
-
-% DM 12/4/17 cc anat = 'cc' will run cc code; anat = 'hipp' will run hipp code
-% anat = 'cc';
 
 %% SHORT VERSION OPTIONS (see README.md)
 
@@ -42,11 +37,20 @@ cd(SUBJECTS_DIR)
 %sub = fullfile(SUBJECTS_DIR,'1004_1');
 %sub = batch_entry(); % opens user dialogue to select subject dirs
 subb=dir(SUBJECTS_DIR);
-sub=subb(5);
-% sub = dir('S*'); 
+subid='1004_1';
+for i=1:length(subid)
+    for j=1:length(subb);
+        temp=strfind(subb(j,1).name,subid);
+        if temp==1
+            subindx = j;
+        end
+    end
+        sub=subb(subindx,1); 
+        % sub = dir('S*'); 
             % Path to file: for freesurfer use 'mri', for manual '' or your file paths
             hipPath = 'mri';
-            % The name give to the hippocampi, for ex.: 'asegHippo', 'HC_subject'
+            % The name give to the hippocampi, for ex.: 'asegHippo',
+            % 'HC_subject' or corpus callosum, for ex.: 'CC_whole'
             %hipName = 'asegHippo'; 
             hipName = 'CC_whole';
             % Extension of the file, for ex.: 'mgz', 'nii.gz'
@@ -184,6 +188,7 @@ for jj=1:length(methods)
             end
         end
     end
+end
 end
 
 % example:

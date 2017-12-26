@@ -29,7 +29,7 @@ function [ M ] = cc_sum(mripath, discreto)
     %system(cmd)
     % Convert to binary
     % read 1 in order to have a volume
-    M = MRIread2([mripath filesep 'CC_whole.mgz']);
+    M = MRIread2([mripath filesep 'cc_whole.mgz']);
     
    
     % If we want to return it binarized
