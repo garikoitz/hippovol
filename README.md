@@ -2,13 +2,16 @@
 
 This code was created to automatically segment MRI hippocampal T1-w images. 
 The hippocampal images are segmented from the brain either manually or using tools available in the communty such as Freesurfer (already tested) or FSL. 
+
+**We are upgrading the code, for prompt request contact me at:**
+ > Garikoitz Lerma-Usabiaga: garikoitz@gmail.com
+
+
 Althought the main focus of the development of the tool has been the hippocampus, it can be applied to any c-shaped elongated structure, such as the corpus callosum. 
 
 The code has been use to generate all the data in the following paper (if you use this tool please cite it as):
- > Lerma-Usabiaga, G., Iglesias, J.E., Insausti, R., Greve, D., & Paz-Alonso. P.M. (2016). Automated segmentation of the human hippocampus along its longitudinal axis. Human Brain Mapping (in Press)
+ > Lerma-Usabiaga, G., Iglesias, J.E., Insausti, R., Greve, D., & Paz-Alonso. P.M. (2016). Automated segmentation of the human hippocampus along its longitudinal axis. Human Brain Mapping.  [Link](https://www.researchgate.net/publication/302592857_Automated_segmentation_of_the_human_hippocampus_along_its_longitudinal_axis)
 
-If you have any questions please write an email to: 
- > Garikoitz Lerma-Usabiaga: garikoitz@gmail.com
 
 
 
@@ -47,10 +50,26 @@ end
   - Do quality check in this step: if aseg didn't do a good job remove the subject. 
 
 #### 1.b If you want to use the FS6 hippocampal subfields
-   -  Select orig_datos = 'fs6' in the file hip_run.m
+   -  Select orig_datos = 'fs6T1' in the file hip_run.m
    -  In the hip_InitMethod.m file, comment the subfields you are not interested in. 
    -  By default, these are the subfields included in the new hippocampi:
-       - 
+```matlab
+                            '201' % alveus
+                            '203' % parasubiculum
+                            '204' % presubiculum
+                            '205' % subiculum
+                            '206' % CA1
+                            '207' % CA2
+                            '208' % CA3
+                            '209' % CA4
+                            '210' % GC-DG
+                            % '211' % HATA
+                            '212' % fimbria
+                            '214' % molecular_layer_HP
+                            % '215' % hippocampal_fissure
+                            '226' % HP_tail
+```
+   - The hip_sum_hippo_subfieldsfs6.m function will extract using the 'mri_extract_label' function the labes not commented above from the ?h.hippoSfLabels-T1.v10.mgz file and create a new file with just 0-s and 1-s, that will be segmented.
 
 ### 2. Run the segmentation
   1. Go to the SUBJECTS_DIR in Matlab

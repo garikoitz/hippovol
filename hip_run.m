@@ -51,7 +51,6 @@ sub = dir('S*');
 orig_datos   = 'fs6';
 voxel_size = 0.3333;  % default 0.33 for fs6, otherwise voxelspace 
 
-
 % Although the default method and that imitates best the manual procedures is
 % the 'PCA' method, the 'Bezier' method is available. This method creates a
 % curved axis that follows better the c-shape of the hippocampus (see paper).
@@ -68,13 +67,14 @@ Head_Perc_List = 417;
 % testing mode at first. Write the segments to visualize results and test for
 % accuracy as well, or to be used as seeds in functional connectivity or
 % tractography. 
-WRITE_MGZ = 1;  
+WRITE_MGZ = 0;  
 
 % It will prepend it to the stat files and to the mgz files.
 structName = 'HIPPO'; 
 
 % If we make minor changes we can save them all with different revisions
-sufixName = 'v033mmFS6'; 
+sufixName = 'v02'; 
+
 
 % END OF SHORT VERSION OPTIONS
 
