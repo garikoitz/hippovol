@@ -10,45 +10,68 @@
 % 2016
 % Contact: garikoitz@gmail.com
 
- 
+
+% GLU: 2018-01-03: for cc, removing the hemispheres
+
+    if strcmp(d.orig_datos,'cc')
+        d.bblta = ['_' d.lta];    
+        d.hemi = {'cc'};
+        d.hemivalor4{1} = 1:4;
+        d.hemivalor3{1} = 1:3;
+        d.cabecera = ['   ID   , Total, Head, Body, Tail  '];
+        d.formato_valores = ['%4s,  %6d,  %6d,  %6d,  %6d \n'];
+    else
         d.bblta = ['_' d.lta];    
         d.hemi = {'lh', 'rh'};
         d.hemivalor4{1} = 1:4; 
         d.hemivalor4{2} = 5:8;
         d.hemivalor3{1} = 1:3; 
         d.hemivalor3{2} = 4:6;
+        d.cabecera = ['   ID   , lh_Total, lh_Head, lh_Body, lh_Tail,  ' ...
+                      '          rh_Total, rh_Head, rh_Body, rh_Tail'];
+        d.formato_valores = ['%4s,  %6d,  %6d,  %6d,  %6d,  ' ...
+                             '%6d,  %6d,  %6d,   %6d \n'];
+    end
+
+
+
+
+ 
             
     % Name of the file to store the data.
-%     d.cabecera = ['   ID   lh_Total     lh_Head    lh_Body    lh_Tail  ' ...
-%                   'rh_Total    rh_Head    rh_Body    rh_Tail'];
-%     d.formato_valores = ['%4s\t  %6d\t  %6d\t  %6d\t  %6d\t  ' ...
-%                          '%6d\t  %6d\t  %6d\t   %6d \n'];
-    d.cabecera = ['   ID,   lh_Total,     lh_Head,    lh_Body,    lh_Tail,  ' ...
-                  'rh_Total,    rh_Head,    rh_Body,    rh_Tail'];
-    d.formato_valores = ['%4s,  %6d,  %6d,  %6d,  %6d,  ' ...
-                         '%6d,  %6d,  %6d,   %6d \n'];
-    if(strcmp(d.method, 'PERC'))
-        fileizena = [d.glm_datos_dir filesep d.structName '_' d.methodName num2str(d.perc) ...
-                    '_' d.orig_datos  d.bblta '_' d.sufixName '.csv']; %.txt
-    else
-        fileizena = [d.glm_datos_dir filesep d.structName '_' d.methodName ...
-                    '_' d.orig_datos  d.bblta '_' d.sufixName '.csv']; %.txt
-                
-        d.cabeceraPERC = ['   ID   lh_PERC   rh_PERC'];
-        d.formato_valoresPERC = ['%4s\t  %6d\t  %6d \n'];
-        fileizenaPERC = [d.glm_datos_dir filesep d.structName '_' d.methodName ...
-                    '_' d.orig_datos  d.bblta '_PERC_' d.sufixName '.txt'];
-        d.fileIDPERC = fopen(fileizenaPERC, 'w');
-        d.fileizenaPERC = fileizenaPERC;
-        fprintf(d.fileIDPERC, '%s \n', d.cabeceraPERC);
-        fclose(d.fileIDPERC);
+    switch d.method
+        case {'MNI', 'Landmark'}
+            fileizena = [d.glm_datos_dir filesep d.structName '_' d.methodName ...
+                        '_' d.orig_datos  d.bblta '_' d.sufixName '.csv']; %.txt
 
+            d.cabeceraPERC = ['   ID   lh_PERC   rh_PERC'];
+            d.formato_valoresPERC = ['%4s\t  %6d\t  %6d \n'];
+            fileizenaPERC = [d.glm_datos_dir filesep d.structName '_' d.methodName ...
+                        '_' d.orig_datos  d.bblta '_PERC_' d.sufixName '.txt'];
+            d.fileIDPERC = fopen(fileizenaPERC, 'w');
+            d.fileizenaPERC = fileizenaPERC;
+            fprintf(d.fileIDPERC, '%s \n', d.cabeceraPERC);
+            fclose(d.fileIDPERC);
+        case {'PERC'}
+            fileizena = [d.glm_datos_dir filesep d.structName '_' d.methodName num2str(d.perc) ...
+                        '_' d.orig_datos  d.bblta '_' d.sufixName '.csv']; %.txt
+        case {'nDivisions'}
+            fileizena = [d.glm_datos_dir filesep d.structName '_' d.methodName num2str(d.howManyN) ...
+                        '_' d.orig_datos  d.bblta '_' d.sufixName '.csv']; %.txt
+        otherwise
+            error('In hip_InitMethod: This is not a recognized METHOD');
     end
+    
+
     
     d.fileID = fopen(fileizena, 'w');
     d.fileizena = fileizena;
     fprintf(d.fileID, '%s \n', d.cabecera); % Careful, added a , for csv
     fclose(d.fileID);
+    
+    
+    
+    
     
     % When reading Koen (FS 5.3) delete the following volumes before computing
     d.eliminar_list = {'posterior_Left-Cerebral-Cortex.mgz'

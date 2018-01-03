@@ -79,9 +79,11 @@ function [HEAD, POSTERIOR, BODY, TAIL] = hip_PCAPERCInsausti(d, M, punto)
     % I had to hack it in order to handle the manual ones in a different
     % direction. 
     % Make it generic
+    % DM 12/4/17 added 'cc' option to 1st case
     switch d.orig_datos
         
-        case {'fs6', 'fs5', 'fsaseg'}
+
+        case {'fs6T1', 'fs5', 'fsaseg', 'cc'}
             head_ind = (X(:,3)  - ...
                                    ((dirVect(1)*(interHead(1)-X(:,1)) + ... 
                                      dirVect(2)*(interHead(2)-X(:,2)))/dirVect(3) + ...

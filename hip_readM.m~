@@ -69,7 +69,8 @@ function M = hip_readM(d, sp, h)
                 disp('Converting volume to 0-s and 1-s')
                 M.vol(M.vol>0) = 1;
             end
-            
+            if 2 == size(unicos,1) && 1 ~= unicos(2)
+            end  
         otherwise
             error([d.orig_datos ' does not exist: only aseg, fs5, fs6, cc and manual accepted.'])
     end
