@@ -57,7 +57,10 @@ hd = hip_InitMethod(hip_Data);
         valores = zeros(1,8); % Initialize each value to zero
         valoresPERC = zeros(1,2);
         % hd.subjects(nsub).name
-        % Do it per each hemisphere
+        % Do it per each hemisphere (for hipp - if clause below for CC)
+        if orig_datos=='cc'
+           hd.hemi=1;
+        end
         for h=1:length(hd.hemi)
             %% READ THE DATA FOR THIS SUBJECT
             M = hip_readM(hd, subject_path, h);
@@ -94,7 +97,8 @@ hd = hip_InitMethod(hip_Data);
                     % values (usually 35%, but now we are testing 30:0.1:40
                     punto = hd.perc; 
                 case {'nDivisions'}
-                    punto    = hd.perc; % for compatibily
+                    % We will use the punto variable to transmit the percentaje
+                    % values (usually 35%, but now we are testing 30:0.1:40
                     howManyN = hd.howManyN; 
                 otherwise
                     error('This is not a recognized METHOD');
@@ -163,7 +167,7 @@ hd = hip_InitMethod(hip_Data);
             end
                                          
         end
-        %% Save results in variable outside parfor to write it afterwards
+        % Save results in variable outside parfor to write it afterwards
         % per each subject
         if(strcmp(hd.method, 'PERC'))
             dir4tempMats = [hd.mat_dirs filesep 'perc' num2str(hd.perc)];
@@ -180,11 +184,7 @@ hd = hip_InitMethod(hip_Data);
             mkdirquiet(dir4tempMats);
             parsave([dir4tempMats filesep hd.subjects(nsub).name '.mat'], valores);
         end
-    end % End of parfor
-    
-    
-    
-    %% This is outside the parfor loop
+    end
     % Now write it:
     fileID = fopen(hd.fileizena, 'a');
     for nn = 1:length(hd.subjects)
@@ -194,7 +194,7 @@ hd = hip_InitMethod(hip_Data);
     end 
     fclose(fileID)
     
-    %% Save the percetnage values corresponding to the landmark
+    % Save the percetnage values corresponding to the landmark
     if(strcmp(hd.method, 'Landmark'))
        fileIDPERC = fopen(hd.fileizenaPERC, 'a'); 
        for nn = 1:length(hd.subjects)
@@ -205,7 +205,7 @@ hd = hip_InitMethod(hip_Data);
        fclose(fileIDPERC)
     end
 
-    %% After it has finished with everything delete all .mat files, even the
+    % After it has finished with everything delete all .mat files, even the
     % one that made the call and return to hip_run
     rmdir(dir4tempMats, 's');
 end

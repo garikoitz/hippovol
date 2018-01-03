@@ -7,7 +7,7 @@ The hippocampal images are segmented from the brain either manually or using too
  > Garikoitz Lerma-Usabiaga: garikoitz@gmail.com
 
 
-Althought the main focus of the development of the tool has been the hippocampus, it can be applied to any c-shaped elongated structure, such as the corpus callosum. 
+Although the main focus of the development of the tool has been the hippocampus, it can be applied to any c-shaped elongated structure, such as the corpus callosum. 
 
 The code has been use to generate all the data in the following paper (if you use this tool please cite it as):
  > Lerma-Usabiaga, G., Iglesias, J.E., Insausti, R., Greve, D., & Paz-Alonso. P.M. (2016). Automated segmentation of the human hippocampus along its longitudinal axis. Human Brain Mapping.  [Link](https://www.researchgate.net/publication/302592857_Automated_segmentation_of_the_human_hippocampus_along_its_longitudinal_axis)
@@ -28,9 +28,6 @@ The code has been use to generate all the data in the following paper (if you us
   - Extract the hippocampal labels from Freesurfer's aseg. Assuming that you are always located in the SUBJECTS_DIR of your project: 
   - mri_extract_label  <SUBJECT_NAME>/mri/aseg.mgz 17  <SUBJECT_NAME>/mri/lh.asegHippo.mgz
   - mri_extract_label  <SUBJECT_NAME>/mri/aseg.mgz 53  <SUBJECT_NAME>/mri/rh.asegHippo.mgz
-  - To extract the whole corpus callosum, you can use this code:
-  -- mri_extract_label  <SUBJECT_NAME>/mri/aseg.mgz 251 252 253 254 255  <SUBJECT_NAME>/mri/cc_whole.mgz
-
 
   *Sample code to extract the aseg hippocampi (run matlab from command line with FREESURFER_HOME defined):*
 ```matlab

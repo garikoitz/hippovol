@@ -9,32 +9,28 @@ function resp = hip_writeM(HEAD, POSTERIOR, BODY, TAIL, d, sp, h)
 % Contact: garikoitz@gmail.com
     
 
-% TODO, use: 
-%        try
-%           statement, ..., statement, 
-%        CATCH ME
-%           statement, ..., statement 
-%        END
-%  
-%     Normally, only the statements between the try and CATCH are executed.
-%     However, if an error occurs while executing any of the statements, the
-%     error is captured into an object, ME, of class MException, and the 
-%     statements between the CATCH and END are executed. If an error occurs 
-%     within the CATCH statements, execution stops, unless caught by another 
-%     try...CATCH block. The ME argument is optional. 
-if(strcmp(d.method, 'PERC'))
-    ForName = char([d.methodName '.' d.orig_datos '.'  d.hemi{h} '.' num2str(d.perc)]);
-elseif(strcmp(d.method, 'Landmark'))
-    ForName = char([d.methodName '.' d.orig_datos '.'  d.hemi{h} '.' d.bblta]);
-else        
-    ForName = char([d.methodName '.' d.orig_datos '.'  d.hemi{h} '.' d.bblta]);
+
+switch d.method
+    case {'Landmark'}
+        ForName = char([d.methodName '.' d.orig_datos '.'  d.hemi{h} '.' d.bblta]);
+    case {'PERC'}
+        ForName = char([d.methodName '.' d.orig_datos '.'  d.hemi{h} '.' num2str(d.perc)]);
+    case {'MNI'}
+        ForName = char([d.methodName '.' d.orig_datos '.'  d.hemi{h} '.' d.bblta]);
+    case {'nDivisions'}
+        ForName = char([d.methodName '.' d.orig_datos '.'  d.hemi{h} '.xxOf' num2str(d.howManyN)]);
+    otherwise
+        error('In hip_InitMethod: This is not a recognized METHOD');
 end
-    disp(['Writing files...']);
-    MRIwrite(HEAD,      char([sp filesep ForName '.head.hippovol_' d.sufixName '.mgz']));
-    MRIwrite(POSTERIOR, char([sp filesep ForName '.posterior.hippovol_' d.sufixName '.mgz']));
-    MRIwrite(BODY,      char([sp filesep ForName '.body.hippovol_' d.sufixName '.mgz']));
-    MRIwrite(TAIL,      char([sp filesep ForName '.tail.hippovol_' d.sufixName '.mgz']));
-    resp = 'DONE';
-    disp(['... finished writing files in ' sp]);
+disp(['Writing files...']);
+MRIwrite(HEAD,      char([sp filesep ForName '.head.hippovol_' d.sufixName '.mgz']));
+MRIwrite(POSTERIOR, char([sp filesep ForName '.posterior.hippovol_' d.sufixName '.mgz']));
+MRIwrite(BODY,      char([sp filesep ForName '.body.hippovol_' d.sufixName '.mgz']));
+MRIwrite(TAIL,      char([sp filesep ForName '.tail.hippovol_' d.sufixName '.mgz']));
+resp = 'DONE';
+disp(['... finished writing files in ' sp]);
+
+
 end
+
 
