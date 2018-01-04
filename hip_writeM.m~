@@ -8,7 +8,7 @@ function resp = hip_writeM(HEAD, POSTERIOR, BODY, TAIL, d, sp, h)
 % 2016
 % Contact: garikoitz@gmail.com
     
-
+disp(['Writing files...']);
 
 switch d.method
     case {'Landmark'}
@@ -22,58 +22,27 @@ switch d.method
     otherwise
         error('In hip_InitMethod: This is not a recognized METHOD');
 end
-disp(['Writing files...']);
-MRIwrite(HEAD,      char([sp filesep ForName '.head.hippovol_' d.sufixName '.mgz']));
-MRIwrite(POSTERIOR, char([sp filesep ForName '.posterior.hippovol_' d.sufixName '.mgz']));
-MRIwrite(BODY,      char([sp filesep ForName '.body.hippovol_' d.sufixName '.mgz']));
-MRIwrite(TAIL,      char([sp filesep ForName '.tail.hippovol_' d.sufixName '.mgz']));
+
+
+switch d.method
+    case {'Landmark','PERC','MNI'}
+        MRIwrite(HEAD,      char([sp filesep ForName '.head.hippovol_' d.sufixName '.mgz']));
+        MRIwrite(POSTERIOR, char([sp filesep ForName '.posterior.hippovol_' d.sufixName '.mgz']));
+        MRIwrite(BODY,      char([sp filesep ForName '.body.hippovol_' d.sufixName '.mgz']));
+        MRIwrite(TAIL,      char([sp filesep ForName '.tail.hippovol_' d.sufixName '.mgz']));
+    case {'nDivisions'}
+        segmVOLS = HEAD;
+        N = length(segmVOLS);
+        for ii = 1:N
+            
+        end
+    otherwise
+        error('In hip_InitMethod: This is not a recognized METHOD');
+end
+
+
 resp = 'DONE';
 disp(['... finished writing files in ' sp]);
-
-
-
-
-
-
-
-% 
-% % DM 12/4/17 - added option to skip hemisphere naming convention
-% if(strcmp(d.orig_datos, 'cc'));
-%     if(strcmp(d.method, 'PERC'))
-%         ForName = char([d.methodName '.' d.orig_datos '.' num2str(d.perc)]);
-%     elseif(strcmp(d.method, 'Landmark'))
-%         ForName = char([d.methodName '.' d.orig_datos '.' d.bblta]);
-%     else        
-%         ForName = char([d.methodName '.' d.orig_datos '.' d.bblta]);
-%     end
-% 
-%         MRIwrite(HEAD,      char([sp filesep ForName '.head.hippovol.mgz']));
-%         disp(['File written: ' sp filesep ForName '.head.hippovol.mgz']);
-%         MRIwrite(POSTERIOR, char([sp filesep ForName '.posterior.hippovol.mgz']));
-%         MRIwrite(BODY,      char([sp filesep ForName '.body.hippovol.mgz']));
-%         MRIwrite(TAIL,      char([sp filesep ForName '.tail.hippovol.mgz']));
-%         resp = 'DONE';
-% 
-%     
-% elseif isfield(d.hemi{h});
-%     if(strcmp(d.method, 'PERC'))
-%         ForName = char([d.methodName '.' d.orig_datos '.'  d.hemi{h} '.' num2str(d.perc)]);
-%     elseif(strcmp(d.method, 'Landmark'))
-%         ForName = char([d.methodName '.' d.orig_datos '.'  d.hemi{h} '.' d.bblta]);
-%     else        
-%         ForName = char([d.methodName '.' d.orig_datos '.'  d.hemi{h} '.' d.bblta]);
-%     end
-% 
-%         MRIwrite(HEAD,      char([sp filesep ForName '.head.hippovol.mgz']));
-%         disp(['File written: ' sp filesep ForName '.head.hippovol.mgz']);
-%         MRIwrite(POSTERIOR, char([sp filesep ForName '.posterior.hippovol.mgz']));
-%         MRIwrite(BODY,      char([sp filesep ForName '.body.hippovol.mgz']));
-%         MRIwrite(TAIL,      char([sp filesep ForName '.tail.hippovol.mgz']));
-%         resp = 'DONE';
-% end
-% >>>>>>> 360095d116a53dc9985761fa4daf15535e74cebe
-
-
 
 
 end

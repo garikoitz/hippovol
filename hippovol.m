@@ -9,10 +9,15 @@ function [lta] = hippovol(mat_filename)
 load(mat_filename);
 % load('/bcbl/home/public/Gari/PCA/glm/datos_05/mats/PERC_Bezier_Acqu_201')
 % load('/Users/gari/Documents/BCBL_PROJECTS/hippovol/manual_hip/hippovol/data_01/mats/PERC_PCA_Acqu_417')
+% load('~/Documents/BCBL_PROJECTS/MINI/ANALYSIS/freesurferacpc/hippovol/data_01/mats/nDivisions_PCA_Acqu_nDivs10')
 
-methodName = strcat(orientation, method, ComoPost);
+if strcmp(method,'nDivisions'); 
+    methodName = strcat(orientation, method);
+else
+    methodName = strcat(orientation, method, ComoPost);
+end
 
-hip_Data = struct('methodName'   , methodName(1), ...
+hip_Data = struct('methodName'   , methodName, ...  % he quitado (1)
                   'method'       , method, ...
                   'structName'   , structName, ...
                   'sufixName'    , sufixName, ...
@@ -40,24 +45,21 @@ hip_Data.subjects = sub;
 numSub = length(sub);
 hd = hip_InitMethod(hip_Data);
 
-% RESULTADOS = struct('fileizena', hd.fileizena, ...
-%                     'sujetos', struct());
-%                 
-%     for mm = 1:length(hd.subjects)
-%        RESULTADOS.sujetos.(hd.subjects(mm).name) = zeros(1,8);
-%     end
-% Now that we have the data prepared for this particular case of hippovol, now
-% we are going to run through all the subjects. 
-    
-    
+
     %par
     for nsub = 1:numSub
         subject_path = [hd.SUBJECTS_DIR filesep hd.subjects(nsub).name filesep hipPath];
         
-        valores = zeros(1,8); % Initialize each value to zero
+        
+        % Initialize each value to zero
+        if strcmp(hd.method,'nDivisions')
+            valores = zeros(1,length(hd.hemi)*(1 + hd.howManyN));
+        else
+            valores = zeros(1,length(hd.hemi)*(1 + 3));  % total+(head,body,tail)
+        end
         valoresPERC = zeros(1,2);
         % hd.subjects(nsub).name
-        % Do it per each hemisphere
+        % Do it per each hemisphere (does not apply to corpus callosum)
         for h=1:length(hd.hemi)
             %% READ THE DATA FOR THIS SUBJECT
             M = hip_readM(hd, subject_path, h);
@@ -94,7 +96,6 @@ hd = hip_InitMethod(hip_Data);
                     % values (usually 35%, but now we are testing 30:0.1:40
                     punto = hd.perc; 
                 case {'nDivisions'}
-                    punto    = hd.perc; % for compatibily
                     howManyN = hd.howManyN; 
                 otherwise
                     error('This is not a recognized METHOD');
@@ -112,7 +113,7 @@ hd = hip_InitMethod(hip_Data);
                     BODY.vol = BODY.vol(:) / jacobian;
                     TAIL.vol = TAIL.vol(:) / jacobian;
                 case {'Landmark'}
-                    % COde for Eugenio's check
+                    % Code for Eugenio's check
                     if (strcmp(hd.orientation, 'Bezier'))
                         [HEAD, POSTERIOR, BODY, TAIL, perc] = hip_BezierLandmarkInsausti(hd, M, punto);
                         valoresPERC(h) = perc;
@@ -132,7 +133,11 @@ hd = hip_InitMethod(hip_Data);
                         [HEAD, POSTERIOR, BODY, TAIL] = fhandle(hd, M, punto);
                     end 
                 case {'nDivisions'}
-                    [HEAD, POSTERIOR, BODY, TAIL] = hip_PCAPERCInsausti(hd, M, punto);
+                    if(strcmp(hd.orientation, 'Bezier'))
+                        DIVISIONS = hip_BeziernDivisions(hd, M, howManyN);
+                    elseif(strcmp(hd.orientation, 'PCA'))
+                        DIVISIONS = hip_PCAnDivisions(hd, M, howManyN);
+                    end
                 otherwise
                     error('This is not a recognized METHOD');
             end
@@ -141,7 +146,13 @@ hd = hip_InitMethod(hip_Data);
             %% If the option is selected write the resulting segments
             if hd.WRITE_MGZ > 0 % == true write the volumes to file
                 disp('Calling function to write mgz labels...');
-                resp = hip_writeM(HEAD, POSTERIOR, BODY, TAIL, hd, subject_path, h); 
+                if strcmp(hd.method,'nDivisions')
+                    resp = hip_writeM(DIVISIONS,[],[],[],hd,subject_path,h); 
+                else
+                    resp = hip_writeM(HEAD, POSTERIOR, BODY, TAIL, hd, subject_path, h); 
+                end
+                
+                
                 if strcmp(resp,'DONE')
                     disp('If you dont want the files written change WRITE_MGZ option in hip_run.');
                 else
@@ -150,19 +161,55 @@ hd = hip_InitMethod(hip_Data);
             end
 
             %% Save the volumetric values and send them back 
-            if strcmp(hd.orig_datos, 'fs6')
-                % Calculate multiplier to correct for voxel size 
-                voxSizeCorrect = 1/hd.voxel_size^3;
-                valores(hd.hemivalor4{h}) = [round(sum(M.vol(:))/voxSizeCorrect),  ...
-                                             round(sum(HEAD.vol(:))/voxSizeCorrect), ...
-                                             round(sum(BODY.vol(:))/voxSizeCorrect), ...
-                                             round(sum(TAIL.vol(:))/voxSizeCorrect)];
-            else
-                valores(hd.hemivalor4{h}) = [round(sum(M.vol(:))),  sum(HEAD.vol(:)), ...
-                                         sum(BODY.vol(:)), sum(TAIL.vol(:))];
+            switch hd.method
+                case {'Landmark','MNI','PERC'}
+                   if strcmp(hd.orig_datos, 'fs6')
+                        % Calculate multiplier to correct for voxel size 
+                        voxSizeCorrect = 1/hd.voxel_size^3;
+                        valores(hd.hemivalor4{h}) = [round(sum(M.vol(:))/voxSizeCorrect),  ...
+                                                     round(sum(HEAD.vol(:))/voxSizeCorrect), ...
+                                                     round(sum(BODY.vol(:))/voxSizeCorrect), ...
+                                                     round(sum(TAIL.vol(:))/voxSizeCorrect)];
+                    elseif strcmp(hd.orig_datos, 'cc')
+                        error('check options, cc cannot be divided in head body tail at this point')
+                    else
+                        valores(hd.hemivalor4{h}) = [round(sum(M.vol(:))),  sum(HEAD.vol(:)), ...
+                                                 sum(BODY.vol(:)), sum(TAIL.vol(:))];
+                    end
+                case {'nDivisions'}
+                     if strcmp(hd.orig_datos, 'fs6')
+                        % Calculate multiplier to correct for voxel size 
+                        voxSizeCorrect = 1/hd.voxel_size^3;
+                        tmpVals = NaN(1,hd.howManyN+1);
+                        tmpVals(1) = round(sum(M.vol(:))/voxSizeCorrect);
+                        for ii=2:hd.howManyN+1
+                            tmpVals(ii) = round(sum(DIVISIONS{ii-1}.vol(:))/voxSizeCorrect);
+                        end
+                        valores(hd.hemivalor4{h}) = tmpVals;
+                     else
+                        tmpVals = NaN(1,hd.howManyN+1);
+                        tmpVals(1) = round(sum(M.vol(:)));
+                        for ii=2:hd.howManyN+1
+                            tmpVals(ii) = sum(DIVISIONS{ii-1}.vol(:));
+                        end
+                        valores(hd.hemivalor4{h}) = tmpVals;
+                    end
+                otherwise
+                    error('This is not a recognized METHOD');
             end
+            
+            
+            
+            
+            
+            
+            
+            
+            
                                          
-        end
+        end % End of hemi for loop
+        
+        
         %% Save results in variable outside parfor to write it afterwards
         % per each subject
         if(strcmp(hd.method, 'PERC'))

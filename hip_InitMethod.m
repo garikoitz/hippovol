@@ -13,28 +13,73 @@
 
 % GLU: 2018-01-03: for cc, removing the hemispheres
 
-    if strcmp(d.orig_datos,'cc')
-        d.bblta = ['_' d.lta];    
-        d.hemi = {'cc'};
-        d.hemivalor4{1} = 1:4;
-        d.hemivalor3{1} = 1:3;
-        d.cabecera = ['   ID   , Total, Head, Body, Tail  '];
-        d.formato_valores = ['%4s,  %6d,  %6d,  %6d,  %6d \n'];
-    else
-        d.bblta = ['_' d.lta];    
-        d.hemi = {'lh', 'rh'};
-        d.hemivalor4{1} = 1:4; 
-        d.hemivalor4{2} = 5:8;
-        d.hemivalor3{1} = 1:3; 
-        d.hemivalor3{2} = 4:6;
-        d.cabecera = ['   ID   , lh_Total, lh_Head, lh_Body, lh_Tail,  ' ...
-                      '          rh_Total, rh_Head, rh_Body, rh_Tail'];
-        d.formato_valores = ['%4s,  %6d,  %6d,  %6d,  %6d,  ' ...
-                             '%6d,  %6d,  %6d,   %6d \n'];
+    switch d.method
+        case {'MNI', 'Landmark','PERC'}
+            if strcmp(d.orig_datos,'cc')
+                d.bblta = ['_' d.lta];    
+                d.hemi = {'cc'};
+                d.hemivalor4{1} = 1:4;
+                d.cabecera = ['   ID   , Total, Head, Body, Tail  '];
+                d.formato_valores = ['%4s,  %6d,  %6d,  %6d,  %6d \n'];
+            else
+                d.bblta = ['_' d.lta];    
+                d.hemi = {'lh', 'rh'};
+                d.hemivalor4{1} = 1:4; 
+                d.hemivalor4{2} = 5:8;
+                d.cabecera = ['   ID   , lh_Total, lh_Head, lh_Body, lh_Tail,  ' ...
+                              '          rh_Total, rh_Head, rh_Body, rh_Tail'];
+                d.formato_valores = ['%4s,  %6d,  %6d,  %6d,  %6d,  ' ...
+                                     '%6d,  %6d,  %6d,   %6d \n'];
+            end
+        case {'nDivisions'}
+            if strcmp(d.orig_datos,'cc')
+                d.bblta = ['_' d.lta];    
+                d.hemi = {'cc'};
+                d.hemivalor4{1} = 1:(1+d.howManyN);
+                d.cabecera = ['ID,Total'];
+                d.formato_valores = ['%4s,%6d'];
+                for ii=1:d.howManyN
+                    d.cabecera = [d.cabecera ',Div' num2str(ii)];
+                    d.formato_valores = [d.formato_valores ',%6d']; 
+                end
+                d.formato_valores = [d.formato_valores ' \n'];
+                
+            else
+                d.bblta = ['_' d.lta];    
+                d.hemi = {'lh', 'rh'};
+                d.hemivalor4{1} = 1:(1+d.howManyN);
+                d.hemivalor4{2} = (2+d.howManyN):(2+2*d.howManyN);
+                
+                % Left
+                leftCabecera = ['lh_Total'];
+                leftFormato = ['%6d'];
+                for ii=1:d.howManyN
+                    leftCabecera = [leftCabecera ',lh_Div' num2str(ii)];
+                    leftFormato  = [leftFormato ',%6d']; 
+                end
+                % Right
+                rightCabecera = ['rh_Total'];
+                rightFormato  = ['%6d'];
+                for ii=1:d.howManyN
+                    rightCabecera = [rightCabecera ',rh_Div' num2str(ii)];
+                    rightFormato  = [rightFormato ',%6d']; 
+                end
+                
+                % Both
+                d.cabecera = ['ID,' leftCabecera ',' rightCabecera];
+                d.formato_valores = ['%4s,' leftFormato ',' rightFormato ' \n'];
+                
+                
+                
+                d.cabecera = ['   ID   , lh_Total, lh_Head, lh_Body, lh_Tail,  ' ...
+                              '          rh_Total, rh_Head, rh_Body, rh_Tail'];
+                d.formato_valores = ['%4s,'  ...
+                                     '%6d,  %6d,  %6d,  %6d,  ' ...
+                                     '%6d,  %6d,  %6d,   %6d \n'];
+            end            
+        otherwise
+            error('In hip_InitMethod: This is not a recognized METHOD');
     end
-
-
-
 
  
             

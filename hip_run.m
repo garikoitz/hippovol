@@ -15,7 +15,7 @@ clear all; close all; clc;
 
 %  %%%% NOTE %%%%: run this script where the subjects folders are stored
 basedir = pwd;
-basedir = '~/Documents/BCBL_PROJECTS/MINI/ANALYSIS/freesurferacpc';cd(basedir);% for testing
+% basedir = '~/Documents/BCBL_PROJECTS/MINI/ANALYSIS/freesurferacpc';cd(basedir);% for testing
 SUBJECTS_DIR = basedir;
 % For testing purposes, change the value in the wildcard so that only selects
 % one subject inside this main folder where the subjects are located.
@@ -71,7 +71,9 @@ voxel_size = 0.3333;  % default 0.33 for fs6, otherwise voxelspace
 % the 'PCA' method, the 'Bezier' method is available. This method creates a
 % curved axis that follows better the c-shape of the hippocampus (see paper).
 % There is another option 'Acqu', see below. 
-orientations = {'Bezier', 'PCA'};  % Obtain both in the same call using {'Bezier', 'PCA'}
+
+% NOTE: for nDivision, only PCA developed for now
+orientations = {'Bezier'};  % Obtain both in the same call using {'Bezier', 'PCA'}
 
 % Percentage of length to segment head. 41.7% was the average on the paper for 
 % freesurfer's aseg, but it depends on your biological assumptions. 
@@ -98,7 +100,7 @@ sufixName = 'v01';
 % same lenght divisions?
 % methods = {'PERC', 'Landmark', 'MNI', 'nDivisions'};
 methods = {'nDivisions'};
-howManyN           = '10';
+howManyN           = 10;
 
 % END OF SHORT VERSION OPTIONS
 
@@ -168,13 +170,14 @@ for jj=1:length(methods)
         orientation = orientations{kk};
         for ii=1:length(lta_list)
             lta = lta_list{ii};
-            for perci=1:length(Head_Perc_List)  
-                perc = Head_Perc_List(perci);
+            for perci=1:length(Head_Perc_List)
+                if strcmp(method,'PERC');perc=['Perc' num2str(Head_Perc_List(perci))];end;
+                if strcmp(method,'nDivisions');perc=['nDivs' num2str(howManyN)];end;
                 save([mat_dirs filesep methods{jj} '_' orientations{kk} '_' ...
-                      lta_list{ii} '_' num2str(Head_Perc_List(perci))]);
+                      lta_list{ii} '_' perc]);
                 fcmd = ['hippovol(''' mat_dirs '/' methods{jj} '_' ...
                         orientations{kk} '_' lta_list{ii} ...
-                        '_' num2str(Head_Perc_List(perci)) ''')' ];
+                        '_' perc ''')' ];
                 if cluster
                     % -nojvm removed so that matlabpool is working
                     cmd = ['matlab -nosplash -nodesktop -nodisplay  -r ""' ...
@@ -192,3 +195,4 @@ end
 
 % example:
 % hippovol('/bcbl/home/public/Gari/PCA/glm/datos_05/mats/PERC_Bezier_Acqu_422')
+% hippovol('~/Documents/BCBL_PROJECTS/MINI/ANALYSIS/freesurferacpc/hippovol/data_01/mats/nDivisions_PCA_Acqu_nDivs10')
