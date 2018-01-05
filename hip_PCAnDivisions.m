@@ -84,7 +84,7 @@ function DIVISIONS = hip_PCAnDivisions(d, M, N)
     % Make it generic
     % DM 12/4/17 added 'cc' option to 1st case
     switch d.orig_datos
-        case {'fs6T1', 'fs5', 'fsaseg', 'cc'}
+        case {'fs6', 'fs5', 'fsaseg', 'cc'}
             x = 1;
             y = 2;
             z = 3;

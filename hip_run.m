@@ -43,7 +43,7 @@ sub = dir('XS*');
             hipPath = 'mri';
             % The name give to the hippocampi, for ex.: 'asegHippo',
             % 'HC_subject' or corpus callosum, for ex.: 'cc_whole'
-            %hipName = 'asegHippo'; 
+            %hipName = 'asegHippo'; 'hippoSfLabels-T1.v10'
             hipName = 'cc_whole';
             % Extension of the file, for ex.: 'mgz', 'nii.gz'
             hipExt  = 'mgz'; 
@@ -90,10 +90,10 @@ WRITE_MGZ = 1;
 % It will prepend it to the stat files and to the mgz files.
 %structName = 'HIPPO';
 % We will use this struct name to make changes afterwards.
-structName = 'cc'; % DM 12/4/17 cc
+structName = 'HIPPO';  %  'cc'; 
 
 % If we make minor changes we can save them all with different revisions
-sufixName = 'v01'; 
+sufixName = 'v02'; 
 
 
 % Do we want to use the head-body-tail method, or do we want to segment in N

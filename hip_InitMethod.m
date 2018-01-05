@@ -69,13 +69,6 @@
                 d.cabecera = ['ID,' leftCabecera ',' rightCabecera];
                 d.formato_valores = ['%4s,' leftFormato ',' rightFormato ' \n'];
                 
-                
-                
-                d.cabecera = ['   ID   , lh_Total, lh_Head, lh_Body, lh_Tail,  ' ...
-                              '          rh_Total, rh_Head, rh_Body, rh_Tail'];
-                d.formato_valores = ['%4s,'  ...
-                                     '%6d,  %6d,  %6d,  %6d,  ' ...
-                                     '%6d,  %6d,  %6d,   %6d \n'];
             end            
         otherwise
             error('In hip_InitMethod: This is not a recognized METHOD');

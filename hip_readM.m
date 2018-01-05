@@ -14,7 +14,7 @@ function M = hip_readM(d, sp, h)
 
     sel = '';
     switch d.orig_datos
-        case {'aseg'}
+        case {'fsaseg'}
             hemi1 = d.hemi{h}(1);
             if  strcmp(d.method, 'Landmark')
                 rater = d.lta(1);
