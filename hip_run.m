@@ -38,13 +38,13 @@ SUBJECTS_DIR = basedir;
 % - Structures have to be in folders, and 
 % - All structures have to be named the same (e.g.: lh.myHippo.mgz)
 
-sub = dir('XS*'); 
+sub = dir('S*'); 
             % Path to file: for freesurfer use 'mri', for manual '' or your file paths
             hipPath = 'mri';
             % The name give to the hippocampi, for ex.: 'asegHippo',
             % 'HC_subject' or corpus callosum, for ex.: 'cc_whole'
-            %hipName = 'asegHippo'; 'hippoSfLabels-T1.v10'
-            hipName = 'cc_whole';
+            %hipName = 'asegHippo'; 'hippoSfLabels-T1.v10'; 'cc_whole'
+            hipName = 'hippoSfLabels-T1.v10';
             % Extension of the file, for ex.: 'mgz', 'nii.gz'
             hipExt  = 'mgz'; 
             
@@ -61,9 +61,9 @@ sub = dir('XS*');
 %          Requires specifying isotropic voxel size, 0.33 if fs6-s default or your 
 %          acquisition's voxel size (required for volume correction)
 % 'manual': manual segmentation binary masks
-% 'cc'    : option for fs-s cc, made of the sum of the 5 section 251 252 253 254
-%           255, see README
-orig_datos   = 'cc';
+% 'cc'    : option for fs-s corpus callosum, made of the sum of 5 sections
+%           251 252 253 254 255, see README
+orig_datos   = 'fs6';
 voxel_size = 0.3333;  % default 0.33 for fs6, otherwise voxelspace 
 
 
@@ -73,13 +73,13 @@ voxel_size = 0.3333;  % default 0.33 for fs6, otherwise voxelspace
 % There is another option 'Acqu', see below. 
 
 % NOTE: for nDivision, only PCA developed for now
-orientations = {'Bezier'};  % Obtain both in the same call using {'Bezier', 'PCA'}
+orientations = {'PCA'};  % Obtain both in the same call using {'Bezier', 'PCA'}
 
 % Percentage of length to segment head. 41.7% was the average on the paper for 
 % freesurfer's aseg, but it depends on your biological assumptions. 
 % If introduced as a list, it will calculate all the different percentages, for
 % example 201:1:800 or [401 451]. It will add the 
-Head_Perc_List = 417;
+Head_Perc_List = [417];
 
 % 1: to write the mgz-s to file. 0: to obtain just the stats. Set it to zero in
 % testing mode at first. Write the segments to visualize results and test for
@@ -99,8 +99,8 @@ sufixName = 'v02';
 % Do we want to use the head-body-tail method, or do we want to segment in N
 % same lenght divisions?
 % methods = {'PERC', 'Landmark', 'MNI', 'nDivisions'};
-methods = {'nDivisions'};
-howManyN           = 10;
+methods    = {'PERC'};
+howManyN   = 10;
 
 % END OF SHORT VERSION OPTIONS
 
